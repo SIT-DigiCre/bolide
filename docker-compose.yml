@@ -1,0 +1,21 @@
+version: "3"
+services:
+  backend:
+    build: backend
+    restart: always
+    networks:
+      - internal_network
+
+  frontend:
+    build: frontend
+    restart: always
+    networks:
+      - internal_network
+      - https_network
+
+
+networks:
+  internal_network:
+    internal: true
+  https_network:
+    external: true
