@@ -1,12 +1,12 @@
 version: "3"
 services:
-  backend:
+  bolide_backend:
     build: backend
     restart: always
     networks:
       - internal_network
 
-  frontend:
+  bolide_frontend:
     build: frontend
     restart: always
     networks:
