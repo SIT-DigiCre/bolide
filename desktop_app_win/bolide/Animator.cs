@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
-namespace CommetCommunity
+namespace bolide
 {
     public static class Animator
     {
@@ -18,7 +19,7 @@ namespace CommetCommunity
         /// frame は 0 から frequency の値まで 1 ずつ増加します。
         /// frequency は引数と同じものです。
         /// </param>
-        public static void Animate(int interval, int frequency, Func<int, int, bool> callback)
+        public static async void Animate(int interval, int frequency, Func<int, int, bool> callback)
         {
             var timer = new System.Windows.Forms.Timer();
             timer.Interval = interval;
@@ -32,6 +33,14 @@ namespace CommetCommunity
                 frame++;
             };
             timer.Start();
+            /*await System.Threading.Tasks.Task.Run(() =>
+            {
+                while(!(callback(frame, frequency) == false || frame >= frequency))
+                {
+                    Thread.Sleep(interval);
+                    frame++;
+                }
+            });*/
         }
 
         /// <summary>

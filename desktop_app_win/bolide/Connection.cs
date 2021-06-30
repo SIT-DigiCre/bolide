@@ -41,6 +41,11 @@ public class Connection
             UseCookies = false,
         };
         httpClient = new HttpClient(handler);
+        
+    }
+    public void StartConnection()
+    {
+        StartWebSocket();
     }
     /// <summary>
     /// api/loginなどをhttp://a.com/api/loginなどに変換
@@ -49,13 +54,13 @@ public class Connection
     /// <returns></returns>
     public string GetFullURL(string path)
     {
-        if (testMode) return "http://localhost:8000/" + path;
+        if (testMode) return "http://localhost:5000/" + path;
         return baseUrl + "/" + path;
     }
     private void StartWebSocket()
     {
-        if (testMode) baseWebSocketUri = "ws://localhost:8000/";
-        string uri = baseWebSocketUri + roomName;
+        if (testMode) baseWebSocketUri = "ws://localhost:5000/";
+        string uri = baseWebSocketUri + "v1/room/" + roomName ;
         webSocket = new WebSocket(uri);
         webSocket.OnMessage += (sender, e) =>
         {
@@ -75,17 +80,30 @@ public class Connection
         {
             ConnectionStartHandler(this, new ConnectionStartArgs(uri));
         };
+        webSocket.Connect();
 
+    }
+    public async void PostComment(string text,bool isQuestion)
+    {
+        string jsonText = JsonSerializer.Serialize(new CommentEventArgs(text, isQuestion));
+        var content = new StringContent(jsonText, System.Text.Encoding.UTF8, "application/json");
+        var response = await httpClient.PostAsync(GetFullURL($"v1/comment/{roomName}"),content);
+        if(response.StatusCode != System.Net.HttpStatusCode.NotFound)
+        {
+            ConnectionErrorHandler(this,
+                new ConnectionErrorArgs(ErorrKind.WrongRoomID, 
+                await response.Content.ReadAsStringAsync()));
+        }
     }
     public class CommentEventArgs
     {
-        [JsonPropertyName("text")]
-        public string text { get; set; }
+        [JsonPropertyName("comment")]
+        public string comment { get; set; }
         [JsonPropertyName("is_question")]
         public bool isQuestion { get; set; }
-        public CommentEventArgs(string text, bool isQuestion)
+        public CommentEventArgs(string comment, bool isQuestion)
         {
-            this.text = text;
+            this.comment = comment;
             this.isQuestion = isQuestion;
         }
     }
