@@ -7,7 +7,7 @@ services:
       - internal_network
 
   bolide_frontend:
-    build: frontend
+    build: bolide_front
     restart: always
     networks:
       - internal_network
