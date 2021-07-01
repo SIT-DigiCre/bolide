@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "==1.1.2"
+flask-sockets = "==0.2.1"
+gunicorn = "*"
+gevent = "==21.1.2"
+gevent-websocket = "==0.10.1"
+flask-cors = "*"
+flask-expects-json = "*"
+werkzeug = "==1.0.1"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

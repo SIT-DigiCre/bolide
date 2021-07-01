@@ -1,0 +1,21 @@
+version: "3"
+services:
+  bolide_backend:
+    build: backend
+    restart: always
+    networks:
+      - internal_network
+
+  bolide_frontend:
+    build: bolide_front
+    restart: always
+    networks:
+      - internal_network
+      - https_network
+
+
+networks:
+  internal_network:
+    internal: true
+  https_network:
+    external: true

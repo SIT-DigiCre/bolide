@@ -1,0 +1,67 @@
+﻿@page "/"
+
+<p>@state</p>
+@if (isConnected)
+{
+    <form class="input-group mb-2" @onsubmit="PostComment">
+        <input type="text" class="form-control" @bind-value="comment" @bind-value:event="oninput">
+        <div class="input-group-append">
+            <button type="button" class="btn btn-outline-primary" @onclick="PostComment">送信</button>
+        </div>
+    </form>
+    @foreach (var log in logs)
+    {
+        <p>@log</p>
+    }
+}
+else
+{
+    <input type="text" @bind-value="roomName" @bind-value:event="oninput">
+    <button class="btn btn-primary" @onclick="Connect">接続</button>
+}
+
+
+
+@code {
+    bool isConnected = false;
+    private Connection connection;
+    string state = "未接続";
+    List<string> logs = new List<string>();
+    string roomName = "";
+    string comment = "";
+    private void Connect()
+    {
+        if (roomName == "")
+        {
+            state = "room名が空です";
+            StateHasChanged();
+            return;
+        }
+        connection = new Connection(true, roomName, "", "");
+        connection.ConnectionStartHandler += (sender, e) =>
+        {
+            state = "接続済";
+            isConnected = true;
+            StateHasChanged();
+        };
+        connection.CommentEventHandler += (sender, e) =>
+        {
+            logs.Insert(0, e.comment);
+            StateHasChanged();
+        };
+        connection.ConnectionErrorHandler += (sender, e) =>
+        {
+
+        };
+        connection.StartConnection();
+
+    }
+    private void PostComment()
+    {
+        if (connection == null) return;
+        if(comment=="")return;
+        connection.PostComment(comment, false);
+        comment = "";
+        StateHasChanged();
+    }
+}
