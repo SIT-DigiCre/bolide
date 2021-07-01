@@ -70,13 +70,13 @@ namespace bolide
                     graphicsPath.AddString(commentEventArgs.comment, new FontFamily("メイリオ"), 0, 80, new Point(0, 0), StringFormat.GenericDefault);
                     form.Region = new Region(graphicsPath);
                     form.Left = Screen.PrimaryScreen.Bounds.Width;
-                    form.Top = random.Next(1, 10)*20;
+                    form.Top = random.Next(1, 5)*40;
                     form.BackColor = colorPickers[random.Next(0, colorPickers.Count)].selectedColor;
-                    form.TopMost = true;
-                    form.TopLevel = true;
+                    
                     form.Load += (sender, e) =>
                     {
-                        form.BringToFront();
+                        //form.BringToFront();
+                        
                         Animator.Animate(6000, (frame, frequency) =>
                         {
                             if (!form.Visible || form.IsDisposed) return false;
@@ -84,6 +84,11 @@ namespace bolide
                             if (frame == frequency) form.Close();
                             return true;
                         });
+                    };
+                    form.Shown += (sender, e) =>
+                    {
+                        form.TopMost = true;
+                        form.TopLevel = true;
                     };
                     form.ShowDialog();
                 }
@@ -103,7 +108,7 @@ namespace bolide
                 new() { Color.Red,Color.Orange,Color.SkyBlue,Color.SpringGreen,
                     Color.MediumPurple,Color.MediumBlue};
             for (int i = 0; i < colorPickers.Count; i++) colorPickers[i].selectedColor = colors[i];
-            random = new();
+            random = new(1000);
 
         }
     }

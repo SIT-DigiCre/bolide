@@ -34,11 +34,11 @@ public class Connection
     {
         this.testMode = testMode;
         this.roomName = roomName;
-        this.baseUrl = baseUrl;
+        this.baseUrl = baseUrl + "api/";
         this.baseWebSocketUri = baseWebSocketUri;
         handler = new HttpClientHandler();
         httpClient = new HttpClient(handler);
-        
+
     }
     public void StartConnection()
     {
@@ -52,18 +52,18 @@ public class Connection
     public string GetFullURL(string path)
     {
         if (testMode) return "http://localhost:5000/" + path;
-        return baseUrl + "/" + path;
+        return baseUrl + "/api/" + path;
     }
     private async void StartWebSocket()
     {
-        if(webSocket.State == WebSocketState.Open)return;
+        if (webSocket.State == WebSocketState.Open) return;
         if (testMode) baseWebSocketUri = "ws://localhost:5000/";
-        string uri = baseWebSocketUri + "v1/room/" + roomName ;
+        string uri = baseWebSocketUri + "v1/room/" + roomName;
         await webSocket.ConnectAsync(new Uri(uri), disposalTokenSource.Token);
         _ = ReceiveLoop();
-        if (webSocket.State == WebSocketState.Open) 
+        if (webSocket.State == WebSocketState.Open)
             ConnectionStartHandler(this, new ConnectionStartArgs(uri));
-        if (webSocket.State == WebSocketState.Closed) 
+        if (webSocket.State == WebSocketState.Closed)
             ConnectionErrorHandler(this, new ConnectionErrorArgs(ErorrKind.WebsocketClosed, "CLOSE"));
     }
     private async Task ReceiveLoop()
@@ -78,21 +78,21 @@ public class Connection
                 var eventArgs = JsonSerializer.Deserialize<CommentEventArgs>(jsonText);
                 CommentEventHandler(this, eventArgs);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ConnectionErrorHandler(this, new ConnectionErrorArgs(ErorrKind.WebsocketError, e.ToString()));
             }
         }
     }
-    public async void PostComment(string text,bool isQuestion)
+    public async void PostComment(string text, bool isQuestion)
     {
         string jsonText = JsonSerializer.Serialize(new CommentEventArgs(text, isQuestion));
         var content = new StringContent(jsonText, System.Text.Encoding.UTF8, "application/json");
-        var response = await httpClient.PostAsync(GetFullURL($"v1/comment/{roomName}"),content);
-        if(response.StatusCode != System.Net.HttpStatusCode.NotFound)
+        var response = await httpClient.PostAsync(GetFullURL($"v1/comment/{roomName}"), content);
+        if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
         {
             ConnectionErrorHandler(this,
-                new ConnectionErrorArgs(ErorrKind.WrongRoomID, 
+                new ConnectionErrorArgs(ErorrKind.WrongRoomID,
                 await response.Content.ReadAsStringAsync()));
         }
     }

@@ -1,17 +1,29 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-<button class="btn btn-primary" @onclick="Connect">接続</button>
 <p>@state</p>
-<input type="text" @bind-value="comment" @bind-value:event="oninput">
-<button class="btn btn-primary" @onclick="PostComment">送信</button>
-@foreach (var log in logs)
+@if (isConnected)
 {
-    <p>@log</p>
+    <form class="input-group mb-2" @onsubmit="PostComment">
+        <input type="text" class="form-control" @bind-value="comment" @bind-value:event="oninput">
+        <div class="input-group-append">
+            <button type="button" class="btn btn-outline-primary" @onclick="PostComment">送信</button>
+        </div>
+    </form>
+    @foreach (var log in logs)
+    {
+        <p>@log</p>
+    }
 }
+else
+{
+    <input type="text" @bind-value="roomName" @bind-value:event="oninput">
+    <button class="btn btn-primary" @onclick="Connect">接続</button>
+}
+
+
+
 @code {
+    bool isConnected = false;
     private Connection connection;
     string state = "未接続";
     List<string> logs = new List<string>();
@@ -19,26 +31,36 @@ Welcome to your new app.
     string comment = "";
     private void Connect()
     {
-        connection = new Connection(true, "test", "", "");
+        if (roomName == "")
+        {
+            state = "room名が空です";
+            StateHasChanged();
+            return;
+        }
+        connection = new Connection(true, roomName, "", "");
         connection.ConnectionStartHandler += (sender, e) =>
         {
             state = "接続済";
+            isConnected = true;
             StateHasChanged();
         };
         connection.CommentEventHandler += (sender, e) =>
         {
-            logs.Add(e.comment);
+            logs.Insert(0, e.comment);
             StateHasChanged();
         };
-        connection.ConnectionErrorHandler += (sender,e)=>{
+        connection.ConnectionErrorHandler += (sender, e) =>
+        {
 
         };
         connection.StartConnection();
+
     }
     private void PostComment()
     {
-        if(connection==null)return;
-        connection.PostComment(comment,false);
+        if (connection == null) return;
+        if(comment=="")return;
+        connection.PostComment(comment, false);
         comment = "";
         StateHasChanged();
     }
