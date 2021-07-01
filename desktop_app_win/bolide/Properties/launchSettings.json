@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "bolide": {
+      "commandName": "Project",
+      "commandLineArgs": "TESTMODE"
+    }
+  }
+}

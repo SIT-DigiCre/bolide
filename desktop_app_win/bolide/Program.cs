@@ -9,12 +9,14 @@ namespace bolide
 {
     static class Program
     {
+        public static bool testMode = false;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
+            if(args.Length>0)testMode = args[0] == "TESTMODE";
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

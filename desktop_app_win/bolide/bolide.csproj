@@ -6,6 +6,9 @@
     <UseWindowsForms>true</UseWindowsForms>
 	<RuntimeIdentifier>win10-x64</RuntimeIdentifier>
 	<PublishSingleFile>true</PublishSingleFile>
+	<Authors>MogamiTsuchikawa</Authors>
+	<Company>芝浦工業大学デジクリ</Company>
+	<Copyright>digicre.net</Copyright>
   </PropertyGroup>
 
 </Project>
