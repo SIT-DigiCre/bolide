@@ -34,7 +34,7 @@ public class Connection
     {
         this.testMode = testMode;
         this.roomName = roomName;
-        this.baseUrl = baseUrl + "api/";
+        this.baseUrl = baseUrl;
         this.baseWebSocketUri = baseWebSocketUri;
         handler = new HttpClientHandler();
         httpClient = new HttpClient(handler);
