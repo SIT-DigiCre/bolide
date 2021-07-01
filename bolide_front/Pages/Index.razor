@@ -37,7 +37,7 @@ else
             StateHasChanged();
             return;
         }
-        connection = new Connection(true, roomName, "", "");
+        connection = new Connection(false, roomName, "", "");
         connection.ConnectionStartHandler += (sender, e) =>
         {
             state = "接続済";
