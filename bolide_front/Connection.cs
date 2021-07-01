@@ -56,7 +56,7 @@ public class Connection
     }
     private async void StartWebSocket()
     {
-        if (webSocket.State == WebSocketState.Open) return;
+        if(webSocket.State == WebSocketState.Open)return;
         if (testMode) baseWebSocketUri = "ws://localhost:5000/";
         string uri = baseWebSocketUri + "v1/room/" + roomName ;
         await webSocket.ConnectAsync(new Uri(uri), disposalTokenSource.Token);

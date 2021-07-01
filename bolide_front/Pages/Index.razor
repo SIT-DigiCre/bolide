@@ -3,5 +3,43 @@
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+<button class="btn btn-primary" @onclick="Connect">接続</button>
+<p>@state</p>
+<input type="text" @bind-value="comment" @bind-value:event="oninput">
+<button class="btn btn-primary" @onclick="PostComment">送信</button>
+@foreach (var log in logs)
+{
+    <p>@log</p>
+}
+@code {
+    private Connection connection;
+    string state = "未接続";
+    List<string> logs = new List<string>();
+    string roomName = "";
+    string comment = "";
+    private void Connect()
+    {
+        connection = new Connection(true, "test", "", "");
+        connection.ConnectionStartHandler += (sender, e) =>
+        {
+            state = "接続済";
+            StateHasChanged();
+        };
+        connection.CommentEventHandler += (sender, e) =>
+        {
+            logs.Add(e.comment);
+            StateHasChanged();
+        };
+        connection.ConnectionErrorHandler += (sender,e)=>{
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+        };
+        connection.StartConnection();
+    }
+    private void PostComment()
+    {
+        if(connection==null)return;
+        connection.PostComment(comment,false);
+        comment = "";
+        StateHasChanged();
+    }
+}
