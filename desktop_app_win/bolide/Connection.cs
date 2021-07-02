@@ -70,20 +70,32 @@ public class Connection
     private async Task ReceiveLoop()
     {
         var buffer = new ArraySegment<byte>(new byte[1024]);
-        while (!disposalTokenSource.IsCancellationRequested)
+        try
         {
-            try
+            while (!disposalTokenSource.IsCancellationRequested)
             {
                 var received = await webSocket.ReceiveAsync(buffer, disposalTokenSource.Token);
                 var jsonText = System.Text.Encoding.UTF8.GetString(buffer.Array, 0, received.Count);
                 var eventArgs = JsonSerializer.Deserialize<CommentEventArgs>(jsonText);
                 CommentEventHandler(this, eventArgs);
             }
-            catch (Exception e)
-            {
-                ConnectionErrorHandler(this, new ConnectionErrorArgs(ErorrKind.WebsocketError, e.ToString()));
-            }
         }
+        catch (Exception e)
+        {
+            if (webSocket.State == WebSocketState.Closed)
+            {
+                ConnectionErrorHandler(this, new ConnectionErrorArgs(ErorrKind.WebsocketClosed, e.ToString()));
+                webSocket.Dispose();
+                webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, disposalTokenSource.Token);
+                webSocket = null;
+            }
+
+            if (webSocket.State == WebSocketState.Aborted)
+                ConnectionErrorHandler(this, new ConnectionErrorArgs(ErorrKind.WebsocketError, e.ToString()));
+
+            return;
+        }
+
     }
     public async void PostComment(string text, bool isQuestion)
     {

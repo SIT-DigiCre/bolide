@@ -3,6 +3,7 @@
 <p>@state</p>
 @if (isConnected)
 {
+    <p>ルーム名:@roomName</p>
     <form class="input-group mb-2" @onsubmit="PostComment">
         <input type="text" class="form-control" @bind-value="comment" @bind-value:event="oninput">
         <div class="input-group-append">
@@ -51,7 +52,17 @@ else
         };
         connection.ConnectionErrorHandler += (sender, e) =>
         {
-
+            switch(e.erorrKind){
+                case Connection.ErorrKind.WebsocketClosed:
+                    state = "接続終了";
+                    StateHasChanged();
+                    Connect();
+                    break;
+                case Connection.ErorrKind.WebsocketError:
+                    state = "接続エラー";
+                    StateHasChanged();
+                    break;
+            }
         };
         connection.StartConnection();
 
