@@ -26,6 +26,7 @@ namespace bolide
                 roomNameTextBox.BackColor = Color.Orange;
                 return;
             }
+            if (connection != null) return;
             connection = new Connection(Program.testMode,roomNameTextBox.Text,"https://bolide.digicre.net/","wss://bolide.digicre.net/");
             connection.ConnectionErrorHandler += (sender, e) =>
             {
