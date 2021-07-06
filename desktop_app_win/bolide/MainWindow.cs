@@ -71,8 +71,8 @@ namespace bolide
                     graphicsPath.AddString(commentEventArgs.comment, new FontFamily("メイリオ"), 0, 80, new Point(0, 0), StringFormat.GenericDefault);
                     form.Region = new Region(graphicsPath);
                     form.Left = Screen.PrimaryScreen.Bounds.Width;
-                    form.Top = random.Next(1, 5)*40;
-                    form.BackColor = colorPickers[random.Next(0, colorPickers.Count)].selectedColor;
+                    form.Top = yPosRandom.GetNotNearlyRandomValue()*40;
+                    form.BackColor = colorPickers[colorRandom.GetRandomValue()].selectedColor;
                     
                     form.Load += (sender, e) =>
                     {
@@ -99,7 +99,7 @@ namespace bolide
 
         
         List<ColorPicker> colorPickers;
-        Random random;
+        Random colorRandom, yPosRandom;
         private void MainWindow_Load(object sender, EventArgs e)
         {
             colorPickers = 
@@ -109,8 +109,36 @@ namespace bolide
                 new() { Color.Red,Color.Orange,Color.SkyBlue,Color.SpringGreen,
                     Color.MediumPurple,Color.MediumBlue};
             for (int i = 0; i < colorPickers.Count; i++) colorPickers[i].selectedColor = colors[i];
-            random = new(1000);
+            colorRandom = new(1000,0,colorPickers.Count);
+            yPosRandom = new(1000, 1, 7);
 
+        }
+    }
+    public class Random
+    {
+        private System.Random random;
+        private int start,end;
+        private int lastValue = 0;
+        
+        public Random(int seed,int start,int end)
+        {
+            random = new System.Random(seed);
+            this.start = start;
+            this.end = end;
+        }
+        public int GetRandomValue()
+        {
+            int value = random.Next(start, end);
+            while(value==lastValue) value = random.Next(start, end);
+            lastValue = value;
+            return value;
+        }
+        public int GetNotNearlyRandomValue()
+        {
+            int value = random.Next(start, end);
+            while (MathF.Abs(value - lastValue) < 2) value = random.Next(start, end);
+            lastValue = value;
+            return value;
         }
     }
 }
