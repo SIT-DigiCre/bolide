@@ -1,9 +1,11 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager NavigationManager
 
 <p>@state</p>
 @if (isConnected)
 {
-    <p>ルーム名:@roomName</p>
+    <p>ルーム名:@RoomName</p>
     <form class="input-group mb-2" @onsubmit="PostComment">
         <input type="text" class="form-control" @bind-value="comment" @bind-value:event="oninput">
         <div class="input-group-append">
@@ -17,7 +19,7 @@
 }
 else
 {
-    <input type="text" @bind-value="roomName" @bind-value:event="oninput">
+    <input type="text" @bind-value="RoomName" @bind-value:event="oninput">
     <button class="btn btn-primary" @onclick="Connect">接続</button>
 }
 
@@ -28,17 +30,27 @@ else
     private Connection connection;
     string state = "未接続";
     List<string> logs = new List<string>();
-    string roomName = "";
+    [Parameter]
+    public string RoomName { get; set; } = "";
     string comment = "";
+    protected override void OnInitialized()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("roomname", out var roomName))
+        {
+            RoomName = roomName;
+            Connect();
+        }
+    }
     private void Connect()
     {
-        if (roomName == "")
+        if (RoomName == "")
         {
             state = "room名が空です";
             StateHasChanged();
             return;
         }
-        connection = new Connection(false, roomName, "https://bolide.digicre.net/","wss://bolide.digicre.net/");
+        connection = new Connection(false, RoomName, "https://bolide.digicre.net/","wss://bolide.digicre.net/");
         connection.ConnectionStartHandler += (sender, e) =>
         {
             state = "接続済";
