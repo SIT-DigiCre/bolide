@@ -1,0 +1,25 @@
+html {
+  height: 100%;
+}
+
+#comment-view {
+  height: 85vh;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-wrap: break-word;
+}
+#comment-view::-webkit-scrollbar {
+  display: none;
+  white-space: pre-wrap;
+}
+
+.comment-box {
+  background-color: rgb(216, 216, 216);
+  border-radius: 5px;
+  padding: 2px;
+}
+
+.question {
+  background-color: rgb(255, 194, 80);
+}
