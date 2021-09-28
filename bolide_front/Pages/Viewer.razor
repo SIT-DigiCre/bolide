@@ -7,9 +7,17 @@
 @if (isConnected)
 {
     <div id="comment-view">
-    @foreach (var log in logs)
+    @foreach (var c in comments)
     {
-        <p class="comment-box">@log</p>
+        @if (c.isQuestion)
+        {
+            <p class="comment-box question">@c.text</p>
+        }
+        else
+        {
+            <p class="comment-box">@c.text</p>
+        }
+        
     }
     </div>
     
@@ -23,7 +31,7 @@ else
 @code {
     bool isConnected = false;
     private Connection connection;
-    List<string> logs = new List<string>();
+    List<Comment> comments = new List<Comment>();
     [Parameter]
     public string RoomName { get; set; } = "";
     protected override void OnInitialized()
@@ -45,7 +53,7 @@ else
         };
         connection.CommentEventHandler += (sender, e) =>
         {
-            logs.Add(e.comment);
+            comments.Add(new Comment(){ text=e.comment, isQuestion=e.isQuestion });
             JSRuntime.InvokeVoidAsync("scrollToEnd");
             StateHasChanged();
         };
