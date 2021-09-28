@@ -2,19 +2,32 @@
 @using Microsoft.AspNetCore.WebUtilities
 @inject NavigationManager NavigationManager
 
-<p>@state</p>
+<p>@state - ルーム名:@RoomName</p>
 @if (isConnected)
 {
-    <p>ルーム名:@RoomName</p>
-    <form class="input-group mb-2" @onsubmit="PostComment">
-        <input type="text" class="form-control" @bind-value="comment" @bind-value:event="oninput">
-        <div class="input-group-append">
-            <button type="button" class="btn btn-outline-primary" @onclick="PostComment">送信</button>
+    <form class="mb-2" @onsubmit="PostComment">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" @bind-value="isQuestion" @bind-value:event="oninput" id="q-check">
+                <label class="form-check-label" for="q-check">質問として投稿</label>
+            </div>
+        <div class="input-group form-group">
+            <input type="text" class="form-control" @bind-value="comment" @bind-value:event="oninput" />
+            <div class="input-group-append">
+                <button type="button" class="btn btn-outline-primary" @onclick="PostComment">送信</button>
+            </div>
         </div>
     </form>
-    @foreach (var log in logs)
+    @foreach (var c in comments)
     {
-        <p>@log</p>
+        @if (c.isQuestion)
+        {
+            <p style="font-weight: bold">[質問]@c.text</p>
+        }
+        else
+        {
+            <p>@c.text</p>
+        }
+        
     }
 }
 else
@@ -29,10 +42,11 @@ else
     bool isConnected = false;
     private Connection connection;
     string state = "未接続";
-    List<string> logs = new List<string>();
+    List<Comment> comments = new List<Comment>();
     [Parameter]
     public string RoomName { get; set; } = "";
     string comment = "";
+    public bool isQuestion { get; set; } = false;
     protected override void OnInitialized()
     {
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
@@ -59,7 +73,7 @@ else
         };
         connection.CommentEventHandler += (sender, e) =>
         {
-            logs.Insert(0, e.comment);
+            comments.Insert(0, new Comment(){ text=e.comment, isQuestion=e.isQuestion });
             StateHasChanged();
         };
         connection.ConnectionErrorHandler += (sender, e) =>
@@ -83,7 +97,7 @@ else
     {
         if (connection == null) return;
         if(comment=="")return;
-        connection.PostComment(comment, false);
+        connection.PostComment(comment, isQuestion);
         comment = "";
         StateHasChanged();
     }
