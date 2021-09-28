@@ -1,0 +1,67 @@
+@page "/view"
+@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime;
+
+<div class="main">
+@if (isConnected)
+{
+    <div id="comment-view">
+    @foreach (var log in logs)
+    {
+        <p class="comment-box">@log</p>
+    }
+    </div>
+    
+}
+else
+{
+    <h1>Room名が未指定です</h1>
+}
+</div>
+
+@code {
+    bool isConnected = false;
+    private Connection connection;
+    List<string> logs = new List<string>();
+    [Parameter]
+    public string RoomName { get; set; } = "";
+    protected override void OnInitialized()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("roomname", out var roomName))
+        {
+            RoomName = roomName;
+            Connect();
+        }
+    }
+    private void Connect()
+    {
+        connection = new Connection(false, RoomName, "https://bolide.digicre.net/","wss://bolide.digicre.net/");
+        connection.ConnectionStartHandler += (sender, e) =>
+        {
+            isConnected = true;
+            StateHasChanged();
+        };
+        connection.CommentEventHandler += (sender, e) =>
+        {
+            logs.Add(e.comment);
+            JSRuntime.InvokeVoidAsync("scrollToEnd");
+            StateHasChanged();
+        };
+        connection.ConnectionErrorHandler += (sender, e) =>
+        {
+            switch(e.erorrKind){
+                case Connection.ErorrKind.WebsocketClosed:
+                    StateHasChanged();
+                    Connect();
+                    break;
+                case Connection.ErorrKind.WebsocketError:
+                    StateHasChanged();
+                    break;
+            }
+        };
+        connection.StartConnection();
+
+    }
+}
