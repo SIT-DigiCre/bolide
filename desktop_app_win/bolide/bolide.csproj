@@ -2,13 +2,29 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
 	<RuntimeIdentifier>win10-x64</RuntimeIdentifier>
 	<PublishSingleFile>true</PublishSingleFile>
+	<SelfContained>true</SelfContained>
+	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
 	<Authors>MogamiTsuchikawa</Authors>
 	<Company>芝浦工業大学デジクリ</Company>
 	<Copyright>digicre.net</Copyright>
+	<PackageIcon>icon.png</PackageIcon>
+	<ApplicationIcon>c1522f107a199f0a0ec33a0da4821cf8_xxo.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="c1522f107a199f0a0ec33a0da4821cf8_xxo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>

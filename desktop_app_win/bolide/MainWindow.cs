@@ -60,28 +60,27 @@ namespace bolide
         }
         private void AnimateText(Connection.CommentEventArgs commentEventArgs)
         {
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
-                using (var form = new Form())
+                using (var form = new CommentWindow())
                 {
-                    form.FormBorderStyle = FormBorderStyle.None;
-                    form.StartPosition = FormStartPosition.Manual;
-                    form.Width = Screen.PrimaryScreen.Bounds.Width;
-                    var graphicsPath = new System.Drawing.Drawing2D.GraphicsPath();
-                    graphicsPath.AddString(commentEventArgs.comment, new FontFamily("メイリオ"), 0, 80, new Point(0, 0), StringFormat.GenericDefault);
-                    form.Region = new Region(graphicsPath);
                     form.Left = Screen.PrimaryScreen.Bounds.Width;
-                    form.Top = yPosRandom.GetNotNearlyRandomValue()*40;
-                    form.BackColor = colorPickers[colorRandom.GetRandomValue()].selectedColor;
-                    
+                    form.Top = yPosRandom.GetNotNearlyRandomValue() * 40;
+                    //form.BackColor = colorPickers[colorRandom.GetRandomValue()].selectedColor;
+                    form.commentLabel.Text = commentEventArgs.comment;
+                    form.commentLabel.ForeColor = colorPickers[colorRandom.GetRandomValue()].selectedColor;
+                    form.Size = new(form.commentLabel.Size.Width, 130);
+                    form.TransparencyKey = form.BackColor;
+                    double animationTimeScale = 1.0 + form.commentLabel.Width / Screen.PrimaryScreen.Bounds.Width;
+
                     form.Load += (sender, e) =>
                     {
                         //form.BringToFront();
-                        
-                        Animator.Animate(6000, (frame, frequency) =>
+
+                        Animator.Animate((int)(6000 * animationTimeScale), (frame, frequency) =>
                         {
                             if (!form.Visible || form.IsDisposed) return false;
-                            form.Left = Screen.PrimaryScreen.Bounds.Width - Screen.PrimaryScreen.Bounds.Width * frame / frequency;
+                            form.Left = (int)(Screen.PrimaryScreen.Bounds.Width - Screen.PrimaryScreen.Bounds.Width * (1.0 + form.commentLabel.Width / Screen.PrimaryScreen.Bounds.Width) * frame / frequency);
                             if (frame == frequency) form.Close();
                             return true;
                         });
