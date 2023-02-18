@@ -99,6 +99,7 @@ else
         if(comment=="")return;
         connection.PostComment(comment, isQuestion);
         comment = "";
+        isQuestion = false;
         StateHasChanged();
     }
 }
