@@ -47,6 +47,8 @@ document.getElementById("disconnection").addEventListener("click", () => {
         document.getElementById("logArea").innerHTML = "⛔未接続 - コメントは表示されません";
     });
 });
+
+
 //テキストカラー
 document.querySelectorAll(".colBtn").forEach((btn) => {
     btn.addEventListener("change", (e) => {
@@ -56,6 +58,15 @@ document.querySelectorAll(".colBtn").forEach((btn) => {
         console.log([...document.querySelectorAll(".colBtn")].map(x => x.value));
     });
 });
+document.getElementById("colReset").addEventListener("click", () => {
+    chrome.storage.local.set({
+        textColor: ["#ff0041","#ff9c00","#7190f2","#00bf1c","#8e40cf","#12178c"]
+    },() => {
+        location.reload();
+    });
+});
+
+
 
 document.querySelector("form").addEventListener("submit", (e) => {
     e.preventDefault();
