@@ -1,5 +1,5 @@
 chrome.storage.local.get({
-    roomName: "teireikai230417",
+    roomName: "",
     isConnect: false,
     textColor: "#ff0041"
 },(items) => {
@@ -66,7 +66,7 @@ document.querySelector("form").addEventListener("submit", (e) => {
         return;
     }
     
-    fetch('https://bolide.digicre.net/api/v1/comment/teireikai230417', {
+    fetch('https://bolide.digicre.net/api/v1/comment/'+encodeURIComponent(document.getElementById("roomName").value), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

@@ -1,19 +1,3 @@
-const postComment = () => {
-    fetch('https://bolide.digicre.net/api/v1/comment/teireikai230417', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            comment: 'aaaa',
-            is_question: false
-        })
-    })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error(error))
-}
-
 chrome.runtime.onStartup.addListener(() => {
     chrome.storage.local.set({
         isConnect: false

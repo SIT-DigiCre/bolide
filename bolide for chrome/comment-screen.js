@@ -10,6 +10,7 @@ class WebsocketAction {
     //接続する
     connect(roomName) {
         this.roomName = roomName;
+        if(roomName == "") return;
         this.ws = new WebSocket('wss://bolide.digicre.net/api/v1/room/' + roomName);
 
         this.ws.onopen = () => {
@@ -86,7 +87,7 @@ class Comment {
 //ページ読み込み時に実行状態だったらconnect
 const connection = new WebsocketAction();
 chrome.storage.local.get({
-    roomName: "teireikai230417",
+    roomName: "",
     isConnect: true
 }, (items) => {
     if (items.isConnect) {
