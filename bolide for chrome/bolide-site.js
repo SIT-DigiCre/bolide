@@ -64,15 +64,11 @@ const insertExtArea = () => {
                     <li>ブラウザ内で右から流れるコメントスクリーンが表示されます。</li>
                 </ul>
                 <button type="button" class="btn btn-lg btn-block btn-outline-primary" id="start-bolide-screen">コメントスクリーン${items.isConnect ? "終了" : "開始"}</button>
-                <button type="button" class="btn btn-lg btn-block btn-outline-primary" id="execute-bolide-desktop">デスクトップ版起動</button>
+                <!-- <button type="button" class="btn btn-lg btn-block btn-outline-primary" id="execute-bolide-desktop">デスクトップ版起動</button> -->
             </div>
         </div>
         </div>
         `);
-            document.getElementById("execute-bolide-desktop").addEventListener("click", () => {
-                alert("この機能は現在開発中です。");
-                return;
-            });
             document.getElementById("start-bolide-screen").addEventListener("click", () => {
                 chrome.storage.local.get({
                     isConnect: false

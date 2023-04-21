@@ -152,9 +152,9 @@ const displayComment = (content, roomName, commentHeight) => {
     }, (items) => {
     if(items.isConnect){
             comment.start(commentHeight);
-        setTimeout(() => {
-            comment.remove();
-        }, screentime * 1000);
+            setTimeout(() => {
+                comment.remove();
+            }, screentime * 1000);
         }
     });
 }

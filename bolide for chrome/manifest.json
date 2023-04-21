@@ -15,7 +15,7 @@
             ],
             "js": [
                 "reconnecting-websocket.min.js",
-                "comment-screen.js",
+                "comment.js",
                 "bolide-site.js"
             ],
             "run_at": "document_start"
