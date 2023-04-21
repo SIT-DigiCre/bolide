@@ -1,0 +1,34 @@
+{
+    "manifest_version": 3,
+    "name": "bolide for Chrome",
+    "version": "1.0.0",
+    "description": "bolide for Chrome",
+    "icons": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "reconnecting-websocket.min.js",
+                "comment-screen.js",
+                "bolide-site.js"
+            ],
+            "run_at": "document_start"
+        }
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "permissions": [
+        "storage",
+        "tabs"
+    ],
+    "action": {
+        "default_popup": "popup/popup.html"
+    }
+}
