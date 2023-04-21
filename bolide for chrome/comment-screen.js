@@ -148,9 +148,9 @@ document.addEventListener("DOMContentLoaded", () => {
 const displayComment = (content, roomName, commentHeight) => {
     const comment = new Comment(content, roomName);
     chrome.storage.local.get({
-        isDisplay: true
+        isConnect: true
     }, (items) => {
-    if(items.isDisplay){
+    if(items.isConnect){
             comment.start(commentHeight);
         setTimeout(() => {
             comment.remove();
