@@ -147,8 +147,14 @@ document.addEventListener("DOMContentLoaded", () => {
 //コメント表示
 const displayComment = (content, roomName, commentHeight) => {
     const comment = new Comment(content, roomName);
-    comment.start(commentHeight);
-    setTimeout(() => {
-        comment.remove();
-    }, screentime * 1000);
+    chrome.storage.local.get({
+        isDisplay: true
+    }, (items) => {
+    if(items.isDisplay){
+            comment.start(commentHeight);
+        setTimeout(() => {
+            comment.remove();
+        }, screentime * 1000);
+        }
+    });
 }
