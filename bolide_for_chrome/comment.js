@@ -58,7 +58,6 @@ class WebsocketAction {
         }
     }
 }
-
 class Comment {
     constructor(content, roomName) {
         this.content = content;
@@ -66,7 +65,7 @@ class Comment {
     }
     start(commentHeight) {
         chrome.storage.local.get({
-            textColor: "#ff0041"
+            textColor: ["#ff0041","#ff9c00","#7190f2","#00bf1c","#8e40cf","#12178c"]
         }, (items) => {
             console.log("start", this.content, this.roomName);
             this.node = document.createElement("div");
@@ -74,7 +73,7 @@ class Comment {
             this.node.innerHTML = ((this.content.is_question) ? "[質問]" : "") + this.content.comment;
             this.node.style.top = commentHeight * 8 + "vh";
             this.node.style.width = this.content.comment.length * 8 + "vh";
-            this.node.style.color = items.textColor;
+            this.node.style.color = items.textColor[Math.floor( Math.random() * items.textColor.length)];
             const insertAt = document.fullscreenElement || document.body || document.documentElement;
             insertAt.appendChild(this.node);
         });

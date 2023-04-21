@@ -1,7 +1,7 @@
 chrome.storage.local.get({
     roomName: "",
     isConnect: false,
-    textColor: "#ff0041"
+    textColor: ["#ff0041","#ff9c00","#7190f2","#00bf1c","#8e40cf","#12178c"]
 },(items) => {
     document.getElementById("roomName").value = items.roomName;
     if(items.isConnect){
@@ -9,8 +9,9 @@ chrome.storage.local.get({
     }else{
         document.getElementById("logArea").innerHTML = "⛔未接続 - コメントは表示されません";
     }
-    console.log(items.textColor);
-    document.querySelector('[data-color="'+items.textColor+'"]').classList.add("selected");
+    document.querySelectorAll(".colBtn").forEach((btn,i) => {
+        btn.value = items.textColor[i];
+    });
 });
 
 //接続時
@@ -48,15 +49,11 @@ document.getElementById("disconnection").addEventListener("click", () => {
 });
 //テキストカラー
 document.querySelectorAll(".colBtn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-        document.querySelectorAll(".colBtn").forEach((b) => {
-            b.classList.remove("selected");
-        });
-        btn.classList.add("selected");
+    btn.addEventListener("change", (e) => {
         chrome.storage.local.set({
-            textColor: btn.getAttribute("data-color")
-        },() => {
+            textColor: [...document.querySelectorAll(".colBtn")].map(x => x.value)
         });
+        console.log([...document.querySelectorAll(".colBtn")].map(x => x.value));
     });
 });
 
