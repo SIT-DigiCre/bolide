@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "bolide for Chrome",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "bolide for Chrome",
     "icons": {
         "16": "icon.png",
@@ -25,8 +25,7 @@
         "service_worker": "background.js"
     },
     "permissions": [
-        "storage",
-        "tabs"
+        "storage"
     ],
     "action": {
         "default_popup": "popup/popup.html"
