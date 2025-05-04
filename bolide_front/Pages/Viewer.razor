@@ -45,7 +45,7 @@ else
     }
     private void Connect()
     {
-        connection = new Connection(false, RoomName, "https://bolide.digicre.net/","wss://bolide.digicre.net/");
+        connection = new Connection(false, RoomName, "https://bolide.digicre.net","wss://bolide.digicre.net");
         connection.ConnectionStartHandler += (sender, e) =>
         {
             isConnected = true;

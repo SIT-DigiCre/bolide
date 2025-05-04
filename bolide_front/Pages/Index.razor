@@ -64,7 +64,7 @@ else
             StateHasChanged();
             return;
         }
-        connection = new Connection(false, RoomName, "https://bolide.digicre.net/","wss://bolide.digicre.net/");
+        connection = new Connection(false, RoomName, "https://bolide.digicre.net","wss://bolide.digicre.net");
         connection.ConnectionStartHandler += (sender, e) =>
         {
             state = "接続済";
